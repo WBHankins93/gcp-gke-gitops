@@ -12,9 +12,4 @@ terraform {
     }
   }
 
-  backend "gcs" {
-    # Don’t hardcode. Pass these via -backend-config or TF_VARs:
-    # bucket = "your-tf-state-bucket"
-    # prefix = "gcp-gke-gitops/state"
-  }
 }
