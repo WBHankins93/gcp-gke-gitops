@@ -16,7 +16,6 @@ A focused, end-to-end platform slice on **Google Cloud (GCP)** using **Terraform
 - **Observability:** Prometheus Operator, kube-state-metrics, example SLO/alert rules.
 - **Docs & Runbooks:** How to deploy, destroy, and reason about design choices.
 
-> This initial commit is **Step 1: skeleton + README**. Subsequent steps will add Terraform, CI, Argo, and monitoring incrementally.
 
 ## Repository Structure (evolving)
 
@@ -43,13 +42,43 @@ gcp-gke-gitops/
 8. **Docs:** architecture diagram + workflow and runbook.
 9. **Tighten IAM:** least-privilege for Terraform SA and Argo SA.
 
-## Prerequisites (coming soon)
+## Prerequisites
 
 - **GCP:** Project ID, billing enabled, owner/editor role for bootstrap.
 - **Local tooling:** `gcloud`, `terraform >= 1.7`, `kubectl`, `helm`.
 - **GitHub:** Ability to configure OIDC with a GCP Workload Identity Provider.
 
-> Detailed bootstrap steps will be added in Step 2 (Terraform core).
+### Prerequisite: Enable Required GCP APIs
+Before creating the GKE cluster, the following Google Cloud APIs must be enabled in your project. These APIs allow Terraform to provision compute, networking, IAM, and Kubernetes resources.
+
+```bash
+gcloud services enable \
+  container.googleapis.com \
+  compute.googleapis.com \
+  iam.googleapis.com \
+  cloudresourcemanager.googleapis.com
+```
+
+What each API is for
+| API | Purpose |
+| --- | ------- |
+| **Kubernetes Engine API** (`container.googleapis.com`) | Allows creation and management of GKE clusters |
+| **Compute Engine API** (`compute.googleapis.com`) | Enables VM instances, networking, and load balancers used by GKE |
+| **Identity and Access Management (IAM) API** (`iam.googleapis.com`) | Handles service accounts, roles, and Workload Identity bindings |
+| **Cloud Resource Manager API** (`cloudresourcemanager.googleapis.com`) | Manages projects, folders, and organization-level metadata |
+
+Example successful output
+```text
+Operation "operations/acf.p2-888164978125-4a294659-3eeb-4707-8cd4-119f27fbd0a2" finished successfully.
+Successfully enabled the following Google Cloud APIs for your gcp-gke-gitops project:
+• Kubernetes Engine API (container.googleapis.com)
+• Compute Engine API (compute.googleapis.com)
+• Identity and Access Management (IAM) API (iam.googleapis.com)
+• Cloud Resource Manager API (cloudresourcemanager.googleapis.com)
+```
+
+You only need to enable these once per project. If you switch to a different GCP project, re‑run the command.
+
 
 ## Interview Notes (Why & How)
 
