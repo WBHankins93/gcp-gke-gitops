@@ -80,6 +80,14 @@ Successfully enabled the following Google Cloud APIs for your gcp-gke-gitops pro
 You only need to enable these once per project. If you switch to a different GCP project, re‑run the command.
 
 
+## CI/CD Authentication (GitHub OIDC → GCP)
+This repo uses GitHub OIDC with GCP Workload Identity Federation (no JSON keys in GitHub).
+- One‑time setup: see [docs/ci-oidc.md](docs/ci-oidc.md)
+- Script: `scripts/gcp/bootstrap_oidc.sh` (runs the whole bootstrap)
+
+> After bootstrap, set repo secrets: GCP_PROJECT_ID, GCP_PROJECT_NUMBER, GCP_TF_BUCKET, GCP_TF_SA.
+
+
 ## Interview Notes (Why & How)
 
 - **Why this approach?** It mirrors a realistic platform slice: infra → delivery → ops.
