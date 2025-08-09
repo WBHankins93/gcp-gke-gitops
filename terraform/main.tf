@@ -1,3 +1,7 @@
+###############################################################################
+# Root wiring: call the network module
+###############################################################################
+
 locals {
   vpc_name              = "vpc-gitops"
   subnet_name           = "subnet-primary"
@@ -25,3 +29,24 @@ module "network" {
   enable_flow_logs = true
   labels           = var.labels
 }
+
+###############################################################################
+# GKE module (uses network outputs)
+###############################################################################
+module "gke" {
+  source = "./modules/gke"
+
+  project_id  = var.project_id
+  region      = var.region
+
+  cluster_name = var.cluster_name
+
+  network_self_link    = module.network.network_self_link
+  subnetwork_self_link = module.network.subnet_self_link
+
+  pods_range_name      = module.network.pods_range_name
+  services_range_name  = module.network.services_range_name
+
+  labels = var.labels
+}
+
