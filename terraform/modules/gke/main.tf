@@ -1,7 +1,8 @@
 resource "google_container_cluster" "this" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
   project  = var.project_id
+  deletion_protection = false
 
   network    = var.network_self_link
   subnetwork = var.subnetwork_self_link
@@ -43,7 +44,7 @@ resource "google_container_cluster" "this" {
 resource "google_container_node_pool" "primary" {
   name       = "np-primary"
   project    = var.project_id
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.this.name
   node_count = var.node_count
 
