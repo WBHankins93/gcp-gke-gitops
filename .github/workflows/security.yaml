@@ -1,0 +1,27 @@
+name: IaC and Image Security (manual)
+
+on:
+  workflow_dispatch: {}   # manual only (no auto trigger)
+
+jobs:
+  tfsec:
+    name: tfsec (Terraform static analysis)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: terraform
+
+  trivy:
+    name: trivy (image vulnerability scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: nginx:1.27
+          format: 'table'
+          exit-code: '0'        # do NOT fail the run for now
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'

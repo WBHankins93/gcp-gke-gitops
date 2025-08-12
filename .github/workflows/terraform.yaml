@@ -1,0 +1,32 @@
+name: Terraform DRYRUN
+
+on:
+  workflow_dispatch: {}   # manual only (no auto trigger)
+
+permissions:
+  contents: read
+
+jobs:
+  tf-dryrun:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform/overlays/dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: fmt
+        run: terraform fmt -check -recursive
+
+      - name: init (no backend)
+        run: terraform init -backend=false
+
+      - name: validate
+        run: terraform validate
+
+      - name: plan (no refresh, no cloud calls)
+        run: terraform plan -refresh=false -var-file=dev.tfvars -no-color
