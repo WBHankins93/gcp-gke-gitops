@@ -1,0 +1,29 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: view-only
+  namespace: app-dev
+rules:
+- apiGroups: ["", "apps", "batch"]
+  resources:
+    - pods
+    - services
+    - configmaps
+    - deployments
+    - replicasets
+    - jobs
+  verbs: ["get","list","watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-dev-view
+  namespace: app-dev
+subjects:
+- kind: User
+  name: app-dev@example.com   # placeholder for demo; replace with real subject later
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: view-only
+  apiGroup: rbac.authorization.k8s.io
